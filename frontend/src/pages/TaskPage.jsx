@@ -32,7 +32,7 @@ const TaskPage = () => {
 
         // Fetch project details
         const projectResponse = await axios.get(
-          `${process.env.REACT_APP_API_BASE_URL}/api/projects/${projectId}`,
+          `${import.meta.env.VITE_API_BASE_URL}/api/projects/${projectId}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -43,7 +43,7 @@ const TaskPage = () => {
 
         // Fetch tasks for the project
         const tasksResponse = await axios.get(
-          `${process.env.REACT_APP_API_BASE_URL}/api/tasks?projectId=${projectId}`,
+          `${import.meta.env.VITE_API_BASE_URL}/api/tasks?projectId=${projectId}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -76,7 +76,7 @@ const TaskPage = () => {
       const token = localStorage.getItem("token");
 
       const response = await axios.post(
-        `${process.env.REACT_APP_API_BASE_URL}/api/tasks`,
+        `${import.meta.env.VITE_API_BASE_URL}/api/tasks`,
         {
           title,
           description,
@@ -111,7 +111,7 @@ const TaskPage = () => {
       const taskToUpdate = tasks.find((task) => task._id === taskId);
 
       const response = await axios.put(
-        `${process.env.REACT_APP_API_BASE_URL}/api/tasks/${taskId}`,
+        `${import.meta.env.VITE_API_BASE_URL}/api/tasks/${taskId}`,
         {
           title: taskToUpdate.title,
           description: taskToUpdate.description,
@@ -142,7 +142,7 @@ const TaskPage = () => {
       setError("");
       const token = localStorage.getItem("token");
 
-      await axios.delete(`${process.env.REACT_APP_API_BASE_URL}/api/tasks/${taskId}`, {
+      await axios.delete(`${import.meta.env.VITE_API_BASE_URL}/api/tasks/${taskId}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

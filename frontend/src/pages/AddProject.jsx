@@ -25,7 +25,7 @@ function AddProject() {
       
       const token = localStorage.getItem('token');
       
-      await axios.post(`${process.env.REACT_APP_API_BASE_URL}/api/projects`, {
+      await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/projects`, {
         title,
         description
       }, {

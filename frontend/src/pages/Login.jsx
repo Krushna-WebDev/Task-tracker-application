@@ -18,7 +18,7 @@ export const Login = () => {
     try {
       setLoading(true);
 
-      const response = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/api/auth/login`, {
+      const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/auth/login`, {
         email,
         password,
       });
@@ -94,7 +94,7 @@ export const Login = () => {
               )}
 
               <p className="text-sm font-body font-light text-gray-500 dark:text-gray-400">
-                Don’t have an account yet?{" "}
+                Don't have an account yet?{" "}
                 <Link
                   to="/signup"
                   className="font-body font-medium text-blue-600 hover:underline dark:text-blue-500"

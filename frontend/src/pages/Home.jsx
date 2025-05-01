@@ -21,7 +21,7 @@ function Home() {
       }
       
       try {
-        const response = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/projects`, {
+        const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/projects`, {
           headers: {
             Authorization: `Bearer ${token}`
           }
@@ -55,7 +55,7 @@ function Home() {
     try {
       const token = localStorage.getItem("token");
       
-      await axios.delete(`${process.env.REACT_APP_API_BASE_URL}/api/projects/${projectId}`, {
+      await axios.delete(`${import.meta.env.VITE_API_BASE_URL}/api/projects/${projectId}`, {
         headers: {
           Authorization: `Bearer ${token}`
         }
