@@ -56,6 +56,14 @@ app.get("/test-user", async (req, res) => {
   }
 });
 
+// Add right after your existing endpoints
+app.get("/test-no-auth", (req, res) => {
+  res.status(200).json({ 
+    message: "This endpoint works without auth",
+    jwt_secret_length: process.env.JWT_SECRET ? process.env.JWT_SECRET.length : 0
+  });
+});
+
 // Connect to MongoDB with error handling
 mongoose.connect(process.env.MONGODB_URI)
   .then(() => console.log('Connected to MongoDB'))
