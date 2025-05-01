@@ -6,6 +6,7 @@ const projectRoutes = require("./routes/projectRoutes")
 const taskRoutes = require("./routes/taskRoutes")
 const app = express()
 const dotenv = require("dotenv"); 
+const jwt = require("jsonwebtoken");
 
 dotenv.config();
 
@@ -62,6 +63,32 @@ app.get("/test-no-auth", (req, res) => {
     message: "This endpoint works without auth",
     jwt_secret_length: process.env.JWT_SECRET ? process.env.JWT_SECRET.length : 0
   });
+});
+
+// Add after your test-no-auth endpoint
+app.post("/verify-token", (req, res) => {
+  const { token } = req.body;
+  
+  if (!token) {
+    return res.status(400).json({ 
+      valid: false, 
+      message: "No token provided" 
+    });
+  }
+  
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    res.json({ 
+      valid: true, 
+      user: decoded,
+      jwt_secret_first_chars: process.env.JWT_SECRET ? process.env.JWT_SECRET.substring(0, 3) + '...' : null
+    });
+  } catch (error) {
+    res.status(400).json({ 
+      valid: false, 
+      message: error.message 
+    });
+  }
 });
 
 // Connect to MongoDB with error handling
