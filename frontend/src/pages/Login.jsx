@@ -2,8 +2,7 @@ import axios from "axios";
 import React, { useContext, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../components/AuthContext";
-const API_BASE_URL =
-process.env.REACT_APP_API_BASE_URL || "http://localhost:5000";
+
 export const Login = () => {
   const { fetchUser } = useContext(AuthContext);
   const navigate = useNavigate();
@@ -19,7 +18,7 @@ export const Login = () => {
     try {
       setLoading(true);
 
-      const response = await axios.post(`${API_BASE_URL}/api/auth/login`, {
+      const response = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/api/auth/login`, {
         email,
         password,
       });

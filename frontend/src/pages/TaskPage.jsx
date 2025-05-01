@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
-const API_BASE_URL =
-  process.env.REACT_APP_API_BASE_URL || "http://localhost:5000";
 
 const TaskPage = () => {
   const { projectId } = useParams();
@@ -34,7 +32,7 @@ const TaskPage = () => {
 
         // Fetch project details
         const projectResponse = await axios.get(
-          `${API_BASE_URL}/api/projects/${projectId}`,
+          `${process.env.REACT_APP_API_BASE_URL}/api/projects/${projectId}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -45,7 +43,7 @@ const TaskPage = () => {
 
         // Fetch tasks for the project
         const tasksResponse = await axios.get(
-          `${API_BASE_URL}/api/tasks?projectId=${projectId}`,
+          `${process.env.REACT_APP_API_BASE_URL}/api/tasks?projectId=${projectId}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -78,7 +76,7 @@ const TaskPage = () => {
       const token = localStorage.getItem("token");
 
       const response = await axios.post(
-        `${API_BASE_URL}/api/tasks`,
+        `${process.env.REACT_APP_API_BASE_URL}/api/tasks`,
         {
           title,
           description,
@@ -113,7 +111,7 @@ const TaskPage = () => {
       const taskToUpdate = tasks.find((task) => task._id === taskId);
 
       const response = await axios.put(
-        `${API_BASE_URL}/api/tasks/${taskId}`,
+        `${process.env.REACT_APP_API_BASE_URL}/api/tasks/${taskId}`,
         {
           title: taskToUpdate.title,
           description: taskToUpdate.description,
@@ -144,7 +142,7 @@ const TaskPage = () => {
       setError("");
       const token = localStorage.getItem("token");
 
-      await axios.delete(`${API_BASE_URL}/api/tasks/${taskId}`, {
+      await axios.delete(`${process.env.REACT_APP_API_BASE_URL}/api/tasks/${taskId}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
-const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || "http://localhost:5000";
 const Signup = () => {
   const navigate = useNavigate();
   const [name, setName] = useState("");
@@ -23,7 +22,7 @@ const Signup = () => {
     try {
       setLoading(true);
 
-      const response = await axios.post(`${API_BASE_URL}/api/auth/signup`, {
+      const response = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/api/auth/signup`, {
         name,
         email,
         password,

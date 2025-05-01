@@ -2,7 +2,6 @@ import React, { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { AuthContext } from '../components/AuthContext';
-const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || "http://localhost:5000";
 function AddProject() {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
@@ -26,7 +25,7 @@ function AddProject() {
       
       const token = localStorage.getItem('token');
       
-      await axios.post(`${API_BASE_URL}/api/projects`, {
+      await axios.post(`${process.env.REACT_APP_API_BASE_URL}/api/projects`, {
         title,
         description
       }, {
