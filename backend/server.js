@@ -26,6 +26,36 @@ app.get("/", (req, res) => {
   });
 });
 
+// Add a test endpoint to diagnose user creation
+app.get("/test-user", async (req, res) => {
+  try {
+    // Get User model
+    const User = require('./models/userModel');
+    
+    // Test MongoDB connection
+    const db = mongoose.connection;
+    const isConnected = db.readyState === 1; // 1 = connected
+    
+    // Test database operations
+    const count = await User.countDocuments();
+    
+    // Return diagnostic info
+    res.json({
+      success: true,
+      db_connected: isConnected,
+      user_count: count,
+      mongodb_uri_exists: !!process.env.MONGODB_URI,
+      mongodb_uri_starts_with: process.env.MONGODB_URI ? process.env.MONGODB_URI.substring(0, 10) + '...' : null
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: error.message,
+      stack: error.stack
+    });
+  }
+});
+
 // Connect to MongoDB with error handling
 mongoose.connect(process.env.MONGODB_URI)
   .then(() => console.log('Connected to MongoDB'))

@@ -2,6 +2,8 @@ import React, { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { AuthContext } from '../components/AuthContext';
+import { toast } from 'react-toastify';
+
 function AddProject() {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
@@ -16,6 +18,7 @@ function AddProject() {
     
     if (!title) {
       setError('Title is required');
+      toast.error('Project title is required');
       return;
     }
     
@@ -37,11 +40,14 @@ function AddProject() {
       // Refresh user data to get updated projects
       await fetchUser();
       
+      toast.success('Project created successfully!');
       // Redirect to home page
       navigate('/');
     } catch (error) {
       console.error('Error creating project:', error);
-      setError(error.response?.data?.message || 'Failed to create project');
+      const errorMsg = error.response?.data?.message || 'Failed to create project';
+      setError(errorMsg);
+      toast.error(errorMsg);
     } finally {
       setLoading(false);
     }

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
+import { toast } from 'react-toastify';
 
 const TaskPage = () => {
   const { projectId } = useParams();
@@ -54,6 +55,7 @@ const TaskPage = () => {
       } catch (err) {
         console.error("Error fetching data:", err);
         setError("Failed to load project data. Please try again.");
+        toast.error("Failed to load project data. Please try again.");
       } finally {
         setLoading(false);
       }
@@ -67,6 +69,7 @@ const TaskPage = () => {
 
     if (!title) {
       setError("Task title is required");
+      toast.error("Task title is required");
       return;
     }
 
@@ -91,13 +94,16 @@ const TaskPage = () => {
 
       // Add the new task to the list
       setTasks([...tasks, response.data.task]);
+      toast.success("Task created successfully");
 
       // Reset form
       setTitle("");
       setDescription("");
       setShowTaskForm(false);
     } catch (err) {
-      setError(err.response?.data?.message || "Failed to create task");
+      const errorMsg = err.response?.data?.message || "Failed to create task";
+      setError(errorMsg);
+      toast.error(errorMsg);
     } finally {
       setSubmitting(false);
     }
@@ -128,8 +134,10 @@ const TaskPage = () => {
       setTasks(
         tasks.map((task) => (task._id === taskId ? response.data.task : task))
       );
+      toast.success(`Task status updated to ${newStatus.replace('-', ' ')}`);
     } catch (err) {
       setError("Failed to update task status");
+      toast.error("Failed to update task status");
     }
   };
 
@@ -150,8 +158,10 @@ const TaskPage = () => {
 
       // Remove the task from the list
       setTasks(tasks.filter((task) => task._id !== taskId));
+      toast.success("Task deleted successfully");
     } catch (err) {
       setError("Failed to delete task");
+      toast.error("Failed to delete task");
     }
   };
 

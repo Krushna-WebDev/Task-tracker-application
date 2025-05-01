@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { AuthContext } from "../components/AuthContext";
 import axios from "axios";
+import { toast } from 'react-toastify';
 
 function Home() {
   const { user } = useContext(AuthContext);
@@ -31,6 +32,7 @@ function Home() {
       } catch (err) {
         console.error("Error fetching projects:", err);
         setError("Failed to load projects. Please try again.");
+        toast.error("Failed to load projects. Please try again.");
       } finally {
         setLoading(false);
       }
@@ -63,8 +65,10 @@ function Home() {
       
       // Remove the project from the list
       setProjects(projects.filter(project => project._id !== projectId));
+      toast.success("Project deleted successfully");
     } catch (err) {
       setError("Failed to delete project");
+      toast.error("Failed to delete project");
     }
   };
 

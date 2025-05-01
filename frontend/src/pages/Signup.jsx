@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
+import { toast } from 'react-toastify';
+
 const Signup = () => {
   const navigate = useNavigate();
   const [name, setName] = useState("");
@@ -16,6 +18,7 @@ const Signup = () => {
 
     if (!name || !email || !password || !country) {
       setError("All fields are required.");
+      toast.error("All fields are required.");
       return;
     }
 
@@ -30,9 +33,12 @@ const Signup = () => {
       });
 
       localStorage.setItem("token", response.data.token);
+      toast.success("Signup successful! Welcome to Task Tracker.");
       navigate("/");
     } catch (err) {
-      setError("Signup failed. Please try again.");
+      const errorMessage = err.response?.data?.message || "Signup failed. Please try again.";
+      setError(errorMessage);
+      toast.error(errorMessage);
     } finally {
       setLoading(false);
     }

@@ -6,6 +6,8 @@ import Signup from "./pages/Signup";
 import Navbar from "./components/Navbar";
 import TaskPage from "./pages/TaskPage";
 import AddProject from "./pages/AddProject";
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const App = () => {
   return (
@@ -18,6 +20,18 @@ const App = () => {
         <Route path="/add-project" element={<AddProject />} />
         <Route path="/projects/:projectId" element={<TaskPage />} />
       </Routes>
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="dark"
+      />
     </BrowserRouter>
   );
 };

@@ -2,6 +2,7 @@ import axios from "axios";
 import React, { useContext, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../components/AuthContext";
+import { toast } from 'react-toastify';
 
 export const Login = () => {
   const { fetchUser } = useContext(AuthContext);
@@ -15,6 +16,13 @@ export const Login = () => {
     e.preventDefault();
     setError(null);
 
+    if (!email || !password) {
+      const errorMsg = "Email and password are required";
+      setError(errorMsg);
+      toast.error(errorMsg);
+      return;
+    }
+
     try {
       setLoading(true);
 
@@ -25,10 +33,12 @@ export const Login = () => {
 
       localStorage.setItem("token", response.data.token);
       await fetchUser();
-
+      toast.success("Login successful! Welcome back.");
       navigate("/");
     } catch (err) {
-      setError("Login failed. Please check your credentials and try again.");
+      const errorMessage = err.response?.data?.message || "Login failed. Please check your credentials and try again.";
+      setError(errorMessage);
+      toast.error(errorMessage);
     } finally {
       setLoading(false);
     }

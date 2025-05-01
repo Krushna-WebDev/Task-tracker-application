@@ -1,5 +1,6 @@
 import React, { createContext, useState, useEffect } from "react";
 import axios from "axios";
+import { toast } from 'react-toastify';
 
 const AuthContext = createContext();
 
@@ -21,6 +22,11 @@ const AuthProvider = ({ children }) => {
         setUser(response.data.user);
       } catch (error) {
         console.error("Error fetching user data:", error);
+        if (error.response?.status === 401) {
+          // Token expired or invalid
+          localStorage.removeItem("token");
+          toast.error("Session expired. Please login again.");
+        }
         setUser(null);
       }
     } else {
