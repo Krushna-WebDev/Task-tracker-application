@@ -8,13 +8,29 @@ dotenv.config();
 
 const SignUp = async (req, res) => {
   try {
+    console.log("SignUp attempt with data:", {
+      name: req.body.name,
+      email: req.body.email,
+      country: req.body.country,
+      // not logging password for security
+      password_provided: !!req.body.password
+    });
+
     const { name, email, password, country } = req.body;
+
+    // Check if all required fields are present
+    if (!name || !email || !password || !country) {
+      console.log("Missing required fields");
+      return res.status(400).json({ message: "All fields are required" });
+    }
 
     const existedUser = await user.findOne({ email });
     if (existedUser) {
+      console.log("Email already exists:", email);
       return res.status(400).json({ message: "Email Already Exists" });
     }
 
+    console.log("Creating new user");
     const createdUser = await user.create({
       name,
       email,
@@ -22,12 +38,16 @@ const SignUp = async (req, res) => {
       country,
     });
 
+    console.log("User created with ID:", createdUser._id);
+
+    console.log("Generating JWT token");
     const token = jwt.sign(
       { id: createdUser._id, email: email }, 
       process.env.JWT_SECRET, 
       { expiresIn: "1h" }
     );
     
+    console.log("Signup successful");
     res.status(201).json({ 
       message: "User created successfully", 
       token,
@@ -39,6 +59,13 @@ const SignUp = async (req, res) => {
       }
     });
   } catch (error) {
+    console.error("Error in SignUp:", error);
+    console.error("Error details:", JSON.stringify({
+      message: error.message,
+      stack: error.stack,
+      name: error.name
+    }));
+    
     res.status(500).json({ 
       message: "Error creating user", 
       error: error.message 
