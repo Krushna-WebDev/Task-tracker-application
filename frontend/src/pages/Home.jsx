@@ -3,11 +3,12 @@ import { useNavigate, Link } from "react-router-dom";
 import { AuthContext } from "../components/AuthContext";
 import axios from "axios";
 import { toast } from 'react-toastify';
+import LoadingSpinner from "../components/LoadingSpinner";
 
 function Home() {
-  const { user } = useContext(AuthContext);
+  const { user, loading, backendAwake } = useContext(AuthContext);
   const [projects, setProjects] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [projectsLoading, setProjectsLoading] = useState(true);
   const [error, setError] = useState("");
   const [showLoginModal, setShowLoginModal] = useState(false);
   
@@ -16,12 +17,13 @@ function Home() {
   useEffect(() => {
     const fetchProjects = async () => {
       const token = localStorage.getItem("token");
-      if (!token) {
-        setLoading(false);
+      if (!token || !user) {
+        setProjectsLoading(false);
         return;
       }
       
       try {
+        setProjectsLoading(true);
         const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/projects`, {
           headers: {
             Authorization: `Bearer ${token}`
@@ -34,12 +36,16 @@ function Home() {
         setError("Failed to load projects. Please try again.");
         toast.error("Failed to load projects. Please try again.");
       } finally {
-        setLoading(false);
+        setProjectsLoading(false);
       }
     };
     
-    fetchProjects();
-  }, []);
+    if (user) {
+      fetchProjects();
+    } else {
+      setProjectsLoading(false);
+    }
+  }, [user]);
 
   const handleAddProject = () => {
     if (!user) {
@@ -72,12 +78,14 @@ function Home() {
     }
   };
 
+  // Show loading spinner when authentication is in progress
   if (loading) {
-    return (
-      <div className="min-h-screen bg-gray-900 text-white py-10 px-4 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-purple-500"></div>
-      </div>
-    );
+    return <LoadingSpinner message="Loading your data..." />;
+  }
+
+  // Show loading spinner when projects are loading
+  if (projectsLoading && user) {
+    return <LoadingSpinner message="Loading your projects..." />;
   }
 
   return (

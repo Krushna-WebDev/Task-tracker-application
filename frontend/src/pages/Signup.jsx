@@ -1,10 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from 'react-toastify';
+import { AuthContext } from "../components/AuthContext";
 
 const Signup = () => {
   const navigate = useNavigate();
+  const { fetchUser } = useContext(AuthContext);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -34,6 +36,10 @@ const Signup = () => {
 
       localStorage.setItem("token", response.data.token);
       toast.success("Signup successful! Welcome to Task Tracker.");
+      
+      // Fetch user data after successful signup
+      await fetchUser();
+      
       navigate("/");
     } catch (err) {
       const errorMessage = err.response?.data?.message || "Signup failed. Please try again.";
