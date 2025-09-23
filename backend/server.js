@@ -15,7 +15,6 @@ app.use(cors());
 
 app.use(express.json());
 
-// Add basic health check endpoint
 app.get("/", (req, res) => {
   res.status(200).json({ 
     status: "ok", 
@@ -27,20 +26,12 @@ app.get("/", (req, res) => {
   });
 });
 
-// Add a test endpoint to diagnose user creation
 app.get("/test-user", async (req, res) => {
   try {
-    // Get User model
     const User = require('./models/userModel');
-    
-    // Test MongoDB connection
     const db = mongoose.connection;
-    const isConnected = db.readyState === 1; // 1 = connected
-    
-    // Test database operations
+    const isConnected = db.readyState === 1;
     const count = await User.countDocuments();
-    
-    // Return diagnostic info
     res.json({
       success: true,
       db_connected: isConnected,
@@ -57,7 +48,7 @@ app.get("/test-user", async (req, res) => {
   }
 });
 
-// Add right after your existing endpoints
+
 app.get("/test-no-auth", (req, res) => {
   res.status(200).json({ 
     message: "This endpoint works without auth",
@@ -65,7 +56,6 @@ app.get("/test-no-auth", (req, res) => {
   });
 });
 
-// Add after your test-no-auth endpoint
 app.post("/verify-token", (req, res) => {
   const { token } = req.body;
   
@@ -91,19 +81,17 @@ app.post("/verify-token", (req, res) => {
   }
 });
 
-// Connect to MongoDB with error handling
 mongoose.connect(process.env.MONGODB_URI)
   .then(() => console.log('Connected to MongoDB'))
   .catch(err => {
     console.error('MongoDB connection error:', err.message);
   });
 
-// Routes
+
 app.use("/api/auth", userRoutes);
 app.use("/api/projects", projectRoutes);
 app.use("/api/tasks", taskRoutes);
 
-// Global error handler
 app.use((err, req, res, next) => {
   console.error('Error:', err.message);
   res.status(500).json({ 
