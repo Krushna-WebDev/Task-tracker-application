@@ -2,7 +2,7 @@ import axios from "axios";
 import React, { useContext, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../components/AuthContext";
-import { toast } from 'react-toastify';
+import { toast } from "react-toastify";
 
 export const Login = () => {
   const { fetchUser } = useContext(AuthContext);
@@ -26,17 +26,22 @@ export const Login = () => {
     try {
       setLoading(true);
 
-      const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/auth/login`, {
-        email,
-        password,
-      });
+      const response = await axios.post(
+        `${import.meta.env.VITE_API_BASE_URL}/api/auth/login`,
+        {
+          email,
+          password,
+        }
+      );
 
       localStorage.setItem("token", response.data.token);
       await fetchUser();
       toast.success("Login successful! Welcome back.");
       navigate("/");
     } catch (err) {
-      const errorMessage = err.response?.data?.message || "Login failed. Please check your credentials and try again.";
+      const errorMessage =
+        err.response?.data?.message ||
+        "Login failed. Please check your credentials and try again.";
       setError(errorMessage);
       toast.error(errorMessage);
     } finally {
@@ -49,6 +54,19 @@ export const Login = () => {
       <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
         <div className="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
           <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
+            <div className="mb-6 p-4 bg-gray-100 dark:bg-gray-700 rounded-lg">
+              <h2 className="text-lg font-heading font-semibold text-gray-900 dark:text-white mb-2">
+                Testing Credentials
+              </h2>
+              <div className="space-y-1 font-mono text-sm">
+                <p className="text-gray-700 dark:text-gray-300">
+                  Gmail: testing@gmail.com
+                </p>
+                <p className="text-gray-700 dark:text-gray-300">
+                  Password: Test1234
+                </p>
+              </div>
+            </div>
             <h1 className="text-4xl text-center font-heading font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
               Sign in to your account
             </h1>
